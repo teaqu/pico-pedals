@@ -5,6 +5,12 @@
 #include "tusb.h"
 #include "bsp/board_api.h"
 #include "pico/cyw43_arch.h"
+#include "hardware/uart.h"
+
+#define UART_ID uart0
+#define BAUD_RATE 115200
+#define UART_TX_PIN 0
+#define UART_RX_PIN 1
 
 int input_max = 1700;
 int output_min = 0;
@@ -27,11 +33,17 @@ int main()
 {
     board_init();
 
-    stdio_init_all();
-
     adc_init();
     adc_gpio_init(27);
     adc_gpio_init(28);
+
+    // UART
+    stdio_init_all();
+    uart_init(UART_ID, BAUD_RATE);
+    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+
+    printf("Test");
 
     // test button
     const uint BUTTON_PIN = 2;
@@ -67,7 +79,13 @@ int main()
 
         // Print the raw ADC value and corresponding voltage
         // printf("Pedal Value (raw): %u\n", raw_value);
-        printf("Pedal out: %u\n", trig_value);
+        if (trig_value > 0)
+        {
+            printf("Pedal out: %u\n", trig_value);
+        }
+        if (trig_value2 > 0) {
+            printf("Pedal 2 out: %u\n", trig_value2);
+        }
         tud_task();
 
         bool button_pressed = !gpio_get(BUTTON_PIN);
@@ -87,8 +105,8 @@ int main()
         if (tud_hid_ready())
         {
             hid_gamepad_report_t report = {0};
-            report.ry = raw_value;
-            report.rx = raw_value2;
+            report.ry = trig_value;
+            report.rx = trig_value2;
             report.hat = hat;
 
             // Send the report over USB HID
