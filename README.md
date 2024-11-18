@@ -1,8 +1,8 @@
 A very cheap way to add pedals to your PC using a rasbery pi pico.  
 
-![Board](board.jpg)   
+<img src="pedals.jpg" width="400">   
 
-![Pedals](pedals.jpg)
+<img src="board.jpg" width="400">   
 
 For debugging setup uart to GP1 and GP2.  
 
