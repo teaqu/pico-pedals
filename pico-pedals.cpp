@@ -4,7 +4,6 @@
 #include "hardware/adc.h"
 #include "tusb.h"
 #include "bsp/board_api.h"
-#include "pico/cyw43_arch.h"
 #include "hardware/uart.h"
 
 #define UART_ID uart0
@@ -43,16 +42,11 @@ int main()
     gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
     gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
 
-    printf("Test");
-
     // test button
     const uint BUTTON_PIN = 2;
     gpio_init(BUTTON_PIN);
     gpio_set_dir(BUTTON_PIN, GPIO_IN);
     gpio_pull_up(BUTTON_PIN);
-
-    // Wifi module for led
-    cyw43_arch_init();
 
     tud_init(BOARD_TUD_RHPORT);
 
@@ -96,11 +90,6 @@ int main()
         {
             hat = GAMEPAD_HAT_UP;
         }
-
-        // Show led if pedal pressed
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, raw_value > input_min);
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, raw_value2 > input_min);
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, hat);
 
         if (tud_hid_ready())
         {

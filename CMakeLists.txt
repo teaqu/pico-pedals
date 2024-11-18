@@ -47,7 +47,6 @@ pico_enable_stdio_usb(pico-pedals 0)
 # Add the standard library to the build
 target_link_libraries(pico-pedals
         pico_stdlib 
-        pico_cyw43_arch_none
         hardware_uart)
 
 # Add the standard include files to the build
